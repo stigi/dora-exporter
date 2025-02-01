@@ -1,4 +1,4 @@
-FROM golang:1.19.2 as builder
+FROM golang:1.19.2 AS builder
 WORKDIR /usr/local/go/src/dora-exporter
 COPY go.mod ./
 COPY go.sum ./
@@ -9,7 +9,13 @@ RUN make deps
 RUN make dist
 
 FROM alpine:3.16.2
-MAINTAINER Maksym Prokopov <mprokopov@gmaio.com>
+LABEL org.opencontainers.image.title="dora-exporter"
+LABEL org.opencontainers.image.authors="Maksym Prokopov <mprokopov@gmaio.com>"
+LABEL org.opencontainers.image.url="https://github.com/mprokopov/dora-exporter"
+LABEL org.opencontainers.image.source="https://github.com/mprokopov/dora-exporter"
+LABEL org.opencontainers.image.licenses="GPL-2.0-only"
+LABEL org.opencontainers.image.description="Prometheus exporter GitHub and Jira Integrated DORA metrics"
+
 COPY --from=builder /usr/local/go/src/dora-exporter/dora-exporter .
 COPY configs/config.yml.dist config.yml
 
